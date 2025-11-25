@@ -218,7 +218,7 @@ input, textarea { width: 100%; padding: 12px; border: 1px solid #ffe4e9; border-
 input:focus, textarea:focus { border-color: var(--deep-red); outline: none; background: #fff; }
 
 /* --- CSS FORM LỜI CHÚC CƠ BẢN (Clean Style) --- */
-.wishes-box { margin-top: 50px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; }
+.wishes-box { margin-top: 50px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--gold); }
 .wishes-title { font-family: 'Playfair Display', serif; color: var(--deep-red); font-size: 24px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
 .wishes-subtitle { font-size: 14px; color: #666; margin-bottom: 25px; }
 .wish-input-group { margin-bottom: 15px; }
@@ -261,3 +261,4 @@ input:focus, textarea:focus { border-color: var(--deep-red); outline: none; back
     transform: translateY(100vh) rotate(360deg);
   }
 }
+
