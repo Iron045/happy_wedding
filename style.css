@@ -170,7 +170,7 @@ h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--text-body)
 .main-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; text-transform: uppercase; color: var(--gold); margin-bottom: 15px; letter-spacing: 1.5px; }
 .parent-name { font-family: 'Montserrat', sans-serif; font-size: 9px; line-height: 1.8; color: var(--text-muted); font-style: italic; }
 .parent-name strong { font-family: 'Playfair Display', serif; font-weight: 600; font-style: normal; color: var(--text-body); font-size: 14px; margin-left: 5px; }
-@media (max-width: 380px) { .family-container { flex-direction: column; gap: 25px; } .family-divider { transform: rotate(90deg); margin: 10px 0; } }
+@media (max-width: 350px) { .family-container { flex-direction: column; gap: 25px; } .family-divider { transform: rotate(90deg); margin: 10px 0; } }
 
 /* Components */
 .date-circle { width: 130px; height: 130px; border: 2px solid var(--deep-red); outline: 4px double var(--gold); outline-offset: 4px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto 40px; background: #fff; box-shadow: 0 5px 15px var(--shadow-color); }
@@ -207,7 +207,7 @@ h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--text-body)
 .cal-day.empty { pointer-events: none; }
 .cal-day.highlight-heart { color: #ffffff; font-weight: 700; z-index: 2; }
 .cal-day.highlight-heart::before { content: '♥'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(3.5); color: var(--cal-heart-color); opacity: 0.8; z-index: -1; font-size: 14px; filter: blur(0.5px); }
-@media (max-width: 380px) { .cal-day { width: 30px; height: 30px; font-size: 13px;} .time-col { padding: 0 10px; } .time-col.middle { padding: 0 15px; } .time-big { font-size: 24px; } .day-number { font-size: 30px; } .day-of-week, .month-text { font-size: 16px; } }
+@media (max-width: 350px) { .cal-day { width: 30px; height: 30px; font-size: 13px;} .time-col { padding: 0 10px; } .time-col.middle { padding: 0 15px; } .time-big { font-size: 24px; } .day-number { font-size: 30px; } .day-of-week, .month-text { font-size: 16px; } }
 
 .album-vertical-list { display: flex; flex-direction: column; gap: 30px; margin-top: 35px; padding: 10px 0; }
 .gallery-item { width: 100%; height: auto; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); transition: all 0.4s ease; border: 3px solid #fff; display: block; }
@@ -261,5 +261,6 @@ input:focus, textarea:focus { border-color: var(--deep-red); outline: none; back
     transform: translateY(100vh) rotate(360deg);
   }
 }
+
 
 
