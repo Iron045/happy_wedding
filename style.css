@@ -1,29 +1,16 @@
-/* --- style.css (Đã cập nhật sát viền) --- */
+/* --- style.css (Phiên bản: Mở Sổ 3D + Bìa Trắng Đỏ) --- */
 
-/* --- CẤU HÌNH BẢNG MÀU MỚI SANG TRỌNG HƠN --- */
 :root {
   /* Màu đỏ trầm chủ đạo lấy từ ảnh mẫu */
-  --deep-red: #7c1e1e; 
-  /* Màu vàng kim */
+  --deep-red: #8b1e1e; 
   --gold: #b08d55;
   --gold-light: #e8d6b3;
-  
-  /* Tông hồng phấn cũ (giữ lại làm điểm nhấn nhẹ nếu cần) */
-  --primary: #ff8fab; 
-  --primary-light: #ffe4e9; 
-  --accent: #e85a74;
-
-  /* Màu chữ */
   --text-body: #5e4b4f;
   --text-muted: #886e75;
-
-  /* Màu cho lịch */
-  --cal-header-bg: var(--deep-red); /* Dùng màu đỏ trầm cho header lịch */
-  --cal-heart-color: #d32f2f; /* Đỏ tươi cho trái tim */
-  
-  --gate-bg: #ffffff;
+  --cal-header-bg: var(--deep-red);
+  --cal-heart-color: #d32f2f;
   --bg-overlay: #ffffff;
-  --shadow-color: rgba(124, 30, 30, 0.2); /* Bóng đổ tông đỏ */
+  --shadow-color: rgba(124, 30, 30, 0.2);
 }
 
 * { box-sizing: border-box; }
@@ -31,236 +18,171 @@
 body {
   font-family: 'Montserrat', sans-serif;
   margin: 0; padding: 0;
-  /* SỬ DỤNG HÌNH NỀN ĐỎ HOA VĂN */
   background: url('https://i.imgur.com/Ihr3tW2.png') no-repeat center center fixed; 
   background-size: cover;
   color: var(--text-body);
   overflow-x: hidden;
 }
 
-/* --- CÁNH CỔNG TRƯỢT (Cập nhật màu) --- */
+/* --- CỔNG CHÀO: HIỆU ỨNG LẬT SÁCH 3D --- */
 #gate-container {
   position: fixed; inset: 0; z-index: 9999;
-  pointer-events: auto; transition: visibility 2s, opacity 2s;
-  overflow: hidden; 
+  perspective: 2000px; /* Tạo chiều sâu 3D mạnh hơn */
+  overflow: hidden;
+  background: transparent; 
+  pointer-events: auto;
 }
-#gate-container.hidden { visibility: hidden; opacity: 0; pointer-events: none; }
+#gate-container.hidden { pointer-events: none; } /* Chỉ tắt sự kiện chuột, không ẩn display để giữ hiệu ứng */
 
-.door {
-  position: absolute; top: 0; bottom: 0; width: 50%;
-  background-color: var(--gate-bg);
-  /* Họa tiết cửa sử dụng tông vàng kim nhạt */
-  background-image: 
-    radial-gradient(circle at 50% 50%, transparent 0%, transparent 35%, var(--gold-light) 40%, transparent 60%),
-    linear-gradient(45deg, transparent 48%, var(--gold-light) 50%, transparent 52%),
-    linear-gradient(-45deg, transparent 48%, var(--gold-light) 50%, transparent 52%);
-  background-size: 80px 80px, 60px 60px, 60px 60px;
-  display: flex; align-items: center; justify-content: center;
-  transition: transform 1.8s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 2;
-}
-.door-left { left: 0; border-right: 2px solid var(--gold); }
-.door-right { right: 0; border-left: 2px solid var(--gold); }
-
-.gate-content {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%); z-index: 10;
-  text-align: center; transition: opacity 0.8s;
+.gate-perspective {
+    width: 100%; height: 100%;
+    position: relative;
+    /* Dịch chuyển nhẹ sang phải để khi mở sách vẫn nhìn thấy đẹp */
+    display: flex; justify-content: center; align-items: center;
 }
 
-.monogram-box {
-  width: 140px; height: 140px; 
-  background: linear-gradient(135deg, #ffffff, #fffdf5);
-  border: 3px double var(--deep-red); /* Viền đỏ trầm */
-  border-radius: 50%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  margin: 0 auto; cursor: pointer; animation: pulseGlow 2.5s infinite;
-  position: relative;
-  box-shadow: 0 10px 25px var(--shadow-color);
-}
-.monogram-box::before { content: '❧'; font-size: 20px; color: var(--deep-red); position: absolute; top: 5px; }
-.monogram-box::after { content: '❧'; font-size: 20px; color: var(--deep-red); position: absolute; bottom: 5px; transform: rotate(180deg); }
-
-@keyframes pulseGlow { 
-    0% {box-shadow: 0 0 0 0 rgba(124, 30, 30, 0.5); transform: scale(1);} 
-    50% {box-shadow: 0 0 0 15px rgba(124, 30, 30, 0); transform: scale(1.02);} 
-    100% {box-shadow: 0 0 0 0 rgba(124, 30, 30, 0); transform: scale(1);} 
+/* --- TRANG BÌA (BOOK COVER) --- */
+.book-cover {
+    width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0;
+    
+    /* [QUAN TRỌNG] Đặt trục quay nằm ở cạnh TRÁI (Gáy sách) */
+    transform-origin: left center; 
+    
+    transform-style: preserve-3d;
+    transition: transform 2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s 1.5s;
+    box-shadow: 10px 0 30px rgba(0,0,0,0.3); /* Bóng đổ cho bìa */
+    display: flex;
+    background: #fff; /* Nền trắng mặc định */
 }
 
-#gate-container.open .door-left { transform: translateX(-100%); }
-#gate-container.open .door-right { transform: translateX(100%); }
-#gate-container.open .gate-content { opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(0.9); }
+/* KHI MỞ: Quay bìa sang trái 100 độ (giống như mở sách ra) */
+#gate-container.open .book-cover {
+    transform: rotateY(-100deg); 
+    opacity: 0; /* Mờ dần khi mở xong để lộ thiệp */
+}
 
-/* --- LAYOUT CHÍNH MỚI (CHỈNH SỬA TẠI ĐÂY) --- */
+/* --- BỐ CỤC BÌA (CHIA 40/60) --- */
+.cover-left-panel {
+    flex: 0 0 40%; /* Chiếm 40% (phần trắng) */
+    background-color: #fffdf5;
+    position: relative;
+    border-right: 1px solid #eee; /* Đường gấp nhẹ */
+}
+
+.cover-right-panel {
+    flex: 1; /* Chiếm phần còn lại (phần đỏ) */
+    background-color: var(--deep-red);
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* --- CÁC CHI TIẾT TRANG TRÍ (GIỮ NGUYÊN) --- */
+.cover-content {
+    position: relative; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+}
+
+.song-hy-badge {
+    position: absolute; left: -65px; top: 50%; transform: translateY(-50%);
+    width: 130px; height: 130px; z-index: 10;
+}
+.sh-circle {
+    width: 100%; height: 100%; background-color: var(--deep-red);
+    border-radius: 50%; border: 4px solid #fff;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 5px var(--deep-red), 0 0 0 7px #fff;
+}
+.sh-text {
+    font-family: "Noto Serif SC", serif; font-size: 60px; color: #fff; font-weight: bold; line-height: 1;
+}
+
+.cover-text-group { padding-left: 40px; text-align: center; }
+.cover-title {
+    font-family: 'Great Vibes', cursive; color: #fff; font-size: 80px; margin: 0; line-height: 1.1;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3); transform: rotate(-5deg);
+}
+.click-hint {
+    position: absolute; bottom: 40px; color: rgba(255,255,255,0.7);
+    font-size: 12px; text-transform: uppercase; letter-spacing: 2px; animation: pulse 2s infinite;
+}
+.ornament { position: absolute; width: 80px; height: 80px; opacity: 0.6; }
+.ornament::before { content: "❧"; font-size: 50px; position: absolute; }
+.cover-left-panel .ornament { color: var(--deep-red); }
+.cover-right-panel .ornament { color: var(--gold-light); }
+
+.top-left { top: 10px; left: 10px; transform: rotate(-45deg); }
+.bottom-left { bottom: 10px; left: 10px; transform: rotate(45deg); }
+.top-right { top: 10px; right: 10px; transform: rotate(45deg); }
+.bottom-right { bottom: 10px; right: 10px; transform: rotate(135deg); }
+
+@keyframes pulse { 0% {opacity: 0.5;} 50% {opacity: 1;} 100% {opacity: 0.5;} }
+
+/* --- PHẦN CSS CŨ CHO NỘI DUNG BÊN TRONG (GIỮ NGUYÊN) --- */
 .container {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  padding: 0; /* [QUAN TRỌNG] Đặt về 0 để sát viền */
-  position: relative; z-index: 1;
+  padding: 0; position: relative; z-index: 1;
 }
-
-/* Wrapper để tạo viền đỏ đậm xung quanh thẻ trắng */
 .card-wrapper {
     background-color: var(--deep-red);
-    padding: 15px; /* Độ dày của viền đỏ */
-    border-radius: 0; /* [QUAN TRỌNG] Bỏ bo tròn để sát góc màn hình */
-    box-shadow: none; /* Bỏ bóng đổ vì đã full màn hình */
-    width: 100%; max-width: 100%; /* Đảm bảo rộng 100% */
+    padding: 15px; width: 100%; max-width: 100%;
 }
-
 .card {
   background: var(--bg-overlay);
-  width: 100%; 
-  border-radius: 0; /* [QUAN TRỌNG] Nội dung bên trong cũng vuông góc */
-  overflow: hidden; display: flex; flex-direction: column;
+  width: 100%; overflow: hidden; display: flex; flex-direction: column;
   opacity: 0; transform: translateY(30px) scale(0.95); transition: all 1.5s ease-out 0.5s;
 }
 .card.visible { opacity: 1; transform: translateY(0) scale(1); }
 
-/* --- PHOTO PANEL CŨ (Ẩn trên desktop) --- */
-.old-photo-panel { 
-    width: 100%; height: 300px;
-    position: relative; overflow: hidden; 
-    display: none; /* Mặc định ẩn */
-}
-.old-photo-panel img { width: 100%; height: 100%; object-fit: cover; }
-
-/* --- KHỐI HERO MỚI (SPLIT LAYOUT) --- */
-.hero-section-split {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 40px;
-    padding: 20px 0;
-}
-
-/* Cột tên viết tay bên trái */
-.hero-text-col {
-    flex: 1;
-    text-align: center;
-    font-family: 'Great Vibes', cursive;
-    color: var(--deep-red);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.hero-name {
-    font-size: 80px; /* Kích thước chữ lớn */
-    line-height: 1;
-}
-.hero-amp {
-    font-size: 50px;
-    margin: 10px 0;
-    color: var(--gold);
-}
-
-/* Cột ảnh bên phải */
-.hero-img-col {
-    flex: 1.2;
-    position: relative;
-    padding-left: 30px;
-}
-
-.hero-main-img {
-    width: 100%;
-    height: auto;
-    border-radius: 12px;
-    /* Hiệu ứng bóng đổ nổi bật như trong ảnh mẫu */
-    box-shadow: -15px 15px 30px rgba(0,0,0,0.2);
-    transform: rotate(2deg); /* Xoay nhẹ để tạo kiểu */
-    border: 4px solid #fff;
-}
-
+.hero-section-split { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; padding: 20px 0; }
+.hero-text-col { flex: 1; text-align: center; font-family: 'Great Vibes', cursive; color: var(--deep-red); display: flex; flex-direction: column; justify-content: center; }
+.hero-name { font-size: 80px; line-height: 1; }
+.hero-amp { font-size: 50px; margin: 10px 0; color: var(--gold); }
+.hero-img-col { flex: 1.2; position: relative; padding-left: 30px; }
+.hero-main-img { width: 100%; height: auto; border-radius: 12px; box-shadow: -15px 15px 30px rgba(0,0,0,0.2); transform: rotate(2deg); border: 4px solid #fff; }
 .content-panel { padding: 40px 25px; text-align: center; flex: 1; position: relative; }
 
-/* --- RESPONSIVE LAYOUT --- */
-@media (min-width: 992px) {
-  .card { flex-direction: row; }
-  /* Trên desktop, ẩn panel ảnh cũ đi vì đã có hero mới */
-  .old-photo-panel { display: none; }
-  .content-panel { width: 100%; padding: 50px; }
-  
-  /* [TÙY CHỌN] Nếu muốn trên Desktop vẫn có viền đẹp thì bỏ comment đoạn dưới */
-  /*
-  .container { padding: 20px; }
-  .card-wrapper { border-radius: 30px; max-width: 1200px; }
-  .card { border-radius: 20px; }
-  */
-}
-
+@media (min-width: 992px) { .card { flex-direction: row; } .content-panel { width: 100%; padding: 50px; } }
 @media (max-width: 768px) {
-    /* Trên mobile, xếp chồng khối hero */
-    .hero-section-split {
-        flex-direction: column-reverse; /* Ảnh lên trên, tên xuống dưới */
-        gap: 30px;
-    }
+    .hero-section-split { flex-direction: column-reverse; gap: 30px; }
     .hero-img-col { padding-left: 0; }
     .hero-main-img { transform: rotate(0); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
     .hero-name { font-size: 60px; }
+    /* Mobile: Logo bìa nhỏ hơn chút */
+    .song-hy-badge { width: 100px; height: 100px; left: -50px; }
+    .sh-text { font-size: 45px; }
+    .cover-title { font-size: 60px; }
+    /* Trên mobile, mở góc nhỏ hơn chút để không bị văng quá xa màn hình */
+    #gate-container.open .book-cover { transform: rotateY(-110deg); }
 }
 
-/* --- TYPOGRAPHY & MÀU SẮC CẬP NHẬT --- */
+/* Typography & Family */
 h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--text-body); margin: 0; }
 .script-font { font-family: 'Great Vibes', cursive; color: var(--deep-red); font-weight: normal; }
+.header-sub { font-family: 'Pacifico', cursive; text-transform: uppercase; letter-spacing: 3px; font-size: 14px; color: var(--text-muted); font-weight: 500; margin-bottom: 15px; }
 
-/* Ẩn tiêu đề cũ đi vì đã có trong hero section mới */
-h1.main-title { display: none; } 
-
-.header-sub { font-family: 'Cinzel Decorative', cursive; text-transform: uppercase; letter-spacing: 4px; font-size: 14px; color: var(--text-muted); font-weight: 700; margin-bottom: 15px; }
-
-.family-container {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  margin: 35px 0; 
-  border-top: 1px solid var(--gold-light); border-bottom: 1px solid var(--gold-light);
-  padding: 25px 0;
-  position: relative;
-}
-.family-container::before, .family-container::after {
-    content: '♦'; color: var(--gold); position: absolute; left: 50%; transform: translateX(-50%); font-size: 12px; background: var(--bg-overlay); padding: 0 5px;
-}
+.family-container { display: flex; justify-content: space-between; align-items: flex-start; margin: 35px 0; border-top: 1px solid var(--gold-light); border-bottom: 1px solid var(--gold-light); padding: 25px 0; position: relative; }
+.family-container::before, .family-container::after { content: '♦'; color: var(--gold); position: absolute; left: 50%; transform: translateX(-50%); font-size: 12px; background: var(--bg-overlay); padding: 0 5px; }
 .family-container::before { top: -8px; } .family-container::after { bottom: -8px; }
-
 .family-side { flex: 1; text-align: center; }
 .family-divider { width: 40px; display: flex; align-items: center; justify-content: center; color: var(--gold-light); font-size: 28px; font-family: 'Cinzel Decorative'; }
-
-/* Cập nhật màu cho các tiêu đề vai trò */
 .role-title { font-family: 'Great Vibes', cursive; font-size: 32px; color: var(--deep-red); margin-bottom: 8px; line-height: 1; }
 .main-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; text-transform: uppercase; color: var(--text-body); margin-bottom: 15px; letter-spacing: 1.5px; }
 .parent-name { font-family: 'Montserrat', sans-serif; font-size: 9px; line-height: 1.8; color: var(--text-muted); font-style: italic; }
 .parent-name strong { font-family: 'Playfair Display', serif; font-weight: 600; font-style: normal; color: var(--text-body); font-size: 14px; margin-left: 5px; }
+@media (max-width: 380px) { .family-container { flex-direction: column; gap: 25px; } .family-divider { transform: rotate(90deg); margin: 10px 0; } }
 
-@media (max-width: 390px) {
-  .family-container { flex-direction: column; gap: 25px; }
-  .family-divider { transform: rotate(90deg); margin: 10px 0; }
-}
-
-/* --- CÁC COMPONENT KHÁC (Cập nhật màu sang đỏ/vàng) --- */
-.date-circle { 
-    width: 130px; height: 130px; 
-    border: 2px solid var(--deep-red);
-    outline: 4px double var(--gold); outline-offset: 4px;
-    border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto 40px; 
-    background: #fff; box-shadow: 0 5px 15px var(--shadow-color);
-}
+/* Components */
+.date-circle { width: 130px; height: 130px; border: 2px solid var(--deep-red); outline: 4px double var(--gold); outline-offset: 4px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto 40px; background: #fff; box-shadow: 0 5px 15px var(--shadow-color); }
 .date-circle .day { font-size: 36px; font-weight: 700; line-height: 1; color: var(--deep-red); font-family: 'Playfair Display'; }
 .date-circle .month-year { font-size: 13px; text-transform: uppercase; margin-top: 8px; letter-spacing: 2px; font-family: 'Cinzel Decorative'; font-weight: 700; color: var(--gold);}
 
 .countdown-box { display: flex; justify-content: center; gap: 12px; margin: 35px 0; }
-/* Box đếm ngược viền vàng kim, số màu đỏ */
 .cd-item { min-width: 60px; background: #fff; border: 1px solid var(--gold-light); border-radius: 8px; padding: 10px 8px; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
 .cd-number { font-size: 22px; font-weight: bold; color: var(--deep-red); display: block; font-family: 'Playfair Display'; }
 .cd-label { font-size: 10px; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; letter-spacing: 1px;}
 
-/* --- BOX THÔNG TIN TIỆC (GIỮ NGUYÊN CẤU TRÚC CŨ) --- */
-.details-box {
-    background: #fff;
-    border: none;
-    border-radius: 12px;
-    padding: 25px 10px; 
-    text-align: center; 
-    margin-top: 25px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-}
+.details-box { background: #fff; border-radius: 12px; padding: 25px 10px; text-align: center; margin-top: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.03); }
 .wedding-info-title { margin-bottom: 10px; color: var(--text-body); font-family: 'Playfair Display', serif; letter-spacing: 1px; text-align: center; font-size: 20px; text-transform: uppercase; }
 .time-container { display: flex; justify-content: center; align-items: center; margin-bottom: 25px; font-family: 'Playfair Display', serif; color: var(--text-body); }
 .time-col { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 15px; }
@@ -274,7 +196,7 @@ h1.main-title { display: none; }
 .location-info strong { font-size: 16px; color: var(--text-body); }
 .location-info small { color: var(--text-muted); }
 
-/* --- CSS CHO PHẦN LỊCH --- */
+/* Calendar */
 .calendar-container { margin-top: 0; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
 .calendar-header { background-color: var(--cal-header-bg); color: #ffffff; text-align: center; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 20px; padding: 15px 0; letter-spacing: 1px; }
 .calendar-body { padding: 20px; position: relative; }
@@ -285,14 +207,11 @@ h1.main-title { display: none; }
 .cal-day.empty { pointer-events: none; }
 .cal-day.highlight-heart { color: #ffffff; font-weight: 700; z-index: 2; }
 .cal-day.highlight-heart::before { content: '♥'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(3.5); color: var(--cal-heart-color); opacity: 0.8; z-index: -1; font-size: 14px; filter: blur(0.5px); }
-@media (max-width: 400px) { .cal-day { width: 30px; height: 30px; font-size: 13px;} .time-col { padding: 0 10px; } .time-col.middle { padding: 0 15px; } .time-big { font-size: 24px; } .day-number { font-size: 30px; } .day-of-week, .month-text { font-size: 16px; } }
+@media (max-width: 380px) { .cal-day { width: 30px; height: 30px; font-size: 13px;} .time-col { padding: 0 10px; } .time-col.middle { padding: 0 15px; } .time-big { font-size: 24px; } .day-number { font-size: 30px; } .day-of-week, .month-text { font-size: 16px; } }
 
-/* --- ALBUM DỌC --- */
 .album-vertical-list { display: flex; flex-direction: column; gap: 30px; margin-top: 35px; padding: 10px 0; }
 .gallery-item { width: 100%; height: auto; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); transition: all 0.4s ease; border: 3px solid #fff; display: block; }
 .gallery-item:hover { transform: scale(1.02); box-shadow: 0 20px 40px var(--shadow-color); border-color: var(--gold); }
-
-/* --- FORM GỬI LỜI CHÚC (Cập nhật màu nút) --- */
 .btn-submit { background: linear-gradient(135deg, var(--deep-red), var(--accent)); color: white; border: none; padding: 15px; border-radius: 6px; font-size: 14px; width: 100%; cursor: pointer; font-weight: 600; letter-spacing: 2px; margin-top: 15px; text-transform: uppercase; box-shadow: 0 8px 20px var(--shadow-color); transition: 0.3s; }
 .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 25px var(--shadow-color); }
 input, textarea { width: 100%; padding: 12px; border: 1px solid #ffe4e9; border-radius: 6px; margin-bottom: 12px; font-family: inherit; background: #fffbfc; transition: 0.3s; color: var(--text-body); }
