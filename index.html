@@ -174,6 +174,8 @@
                 <textarea rows="4" id="content" name="content" class="wish-input" placeholder="Nhập lời chúc..." required></textarea>
               </div>
               <button type="submit" id="btn-submit-wish" class="btn-submit-wish">Gửi Lời Chúc</button>
+              
+              <p id="form-status" style="margin-top: 15px; font-size: 14px; font-weight: bold; display: none;"></p>
             </form>
           </div>
           
@@ -263,38 +265,54 @@
     
     // 👇👇👇 DÁN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO DƯỚI ĐÂY 👇👇👇
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxh2jf3l8mUETCLA5JbKFwC9iN-aEiNwZk6KgssGyfiAcC_yD0VCiLZc-7KrLHkEuY-iQ/exec'; 
-    // 👆👆👆 Ví dụ: https://script.google.com/macros/s/AKfycb.../exec
-
+    
     const form = document.getElementById('wishes-form');
     const btnSubmit = document.getElementById('btn-submit-wish');
+    const statusMsg = document.getElementById('form-status');
 
     form.addEventListener('submit', e => {
       e.preventDefault();
       
-      // Kiểm tra xem đã dán link chưa
+      // 1. Kiểm tra link
       if(scriptURL.includes('DÁN_LINK')) {
-          alert('Bạn chưa dán đường link Google Script vào code!');
+          statusMsg.innerText = 'Chưa cấu hình đường dẫn Google Script!';
+          statusMsg.style.color = 'red';
+          statusMsg.style.display = 'block';
           return;
       }
 
-      // Hiệu ứng đang gửi
+      // 2. Hiệu ứng đang gửi
       const originalText = btnSubmit.innerText;
       btnSubmit.innerText = 'Đang gửi...';
       btnSubmit.disabled = true;
       btnSubmit.style.opacity = '0.7';
+      
+      // Ẩn thông báo cũ nếu có
+      statusMsg.style.display = 'none';
 
       const requestBody = new FormData(form);
 
       fetch(scriptURL, { method: 'POST', body: requestBody})
         .then(response => {
-           alert('Cảm ơn bạn! Lời chúc đã được gửi thành công ♥');
+           // 3. Gửi THÀNH CÔNG
+           statusMsg.style.display = 'block';
+           statusMsg.style.color = '#27ae60'; // Màu xanh lá
+           statusMsg.innerText = 'Cảm ơn bạn! Lời chúc đã được gửi thành công ♥';
+           
            form.reset();
            btnSubmit.innerText = originalText;
            btnSubmit.disabled = false;
            btnSubmit.style.opacity = '1';
+           
+           // Tự động ẩn thông báo sau 5 giây (tùy chọn)
+           setTimeout(() => { statusMsg.style.display = 'none'; }, 5000);
         })
         .catch(error => {
-           alert('Có lỗi xảy ra! Vui lòng thử lại sau.');
+           // 4. Gửi THẤT BẠI
+           statusMsg.style.display = 'block';
+           statusMsg.style.color = '#c0392b'; // Màu đỏ
+           statusMsg.innerText = 'Có lỗi xảy ra! Vui lòng thử lại sau.';
+           
            console.error('Error!', error.message);
            btnSubmit.innerText = originalText;
            btnSubmit.disabled = false;
